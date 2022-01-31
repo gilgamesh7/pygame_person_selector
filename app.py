@@ -42,7 +42,7 @@ def setup_game()->None:
         player_colours_list = ['Red', 'Black', 'Orange', 'Purple','Yellow','Magenta','Gray','Cyan','White','Violet','Olive','Brown']
         player_names = ['Bernard','Tony','Naresh','Norman','Pawan','Rajesh','Roopal','Srikar','Stephen','Sudha','Vishaal','Raman']
 
-        player_y_pos = 10
+        player_y_pos = 15
         for colour in player_colours_list :
             player_surface = pygame.Surface((50,50))
             player_surface.fill(colour)
@@ -59,9 +59,9 @@ def setup_game()->None:
         pygame.time.set_timer(movement_timer, 2000)
 
         # Caption
-        game_font = pygame.font.SysFont('timesnewroman',  50)
-        race_finish_surface = game_font.render('FINISH', False, (64, 64, 64))
-        race_finish_surface = pygame.transform.rotozoom(race_finish_surface, 270, 3)
+        game_font = pygame.font.SysFont('timesnewroman',  20)
+        race_finish_surface = game_font.render('FINISH', False, (0, 0, 0))
+        race_finish_surface = pygame.transform.rotozoom(race_finish_surface, 270, 2)
 
         winner_font = pygame.font.SysFont('timesnewroman',  20)
         winner_surface = winner_font.render('W', False, (64, 64, 64))
@@ -89,7 +89,8 @@ def game_loop(screen: object, clock: object, movement_timer:object, race_surface
 
             # blit - Block Image Transfer i.e put a regular surface on top of display surface
             screen.blit(race_surface,(0,0))
-            screen.blit(race_finish_surface,(1000,50))
+            screen.blit(race_finish_surface,(1000,300))
+            pygame.draw.line(screen, (0,0,0),(1000,0),(1000,800))
 
             current_speed = [random.randrange(1,10,1) for _ in range(len(player_surfaces_list))] if race_underway else list(itertools.repeat(0, len(player_surfaces_list)))
 
