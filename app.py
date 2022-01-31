@@ -40,8 +40,33 @@ def setup_game()->None:
         player_surfaces_list = []
         player_rectangles_list = []
         player_colours_list = ['Red', 'Black', 'Orange', 'Purple','Yellow','Magenta','Gray','Cyan','White','Violet','Olive','Brown']
-        player_names = ['Bernard','Tony','Naresh','Norman','Pawan','Rajesh','Roopal','Srikar','Stephen','Sudha','Vishaal','Raman']
+        player_names_list = ['Bernard','Tony','Naresh','Norman','Pawan','Rajesh','Roopal','Srikar','Stephen','Sudha','Vishaal','Raman']
 
+        # assign colours to players
+        players_table_surfaces_list = []
+        players_table_rectangles_list = []
+        players_name_surfaces_list = []
+
+        player_name_font = pygame.font.SysFont('timesnewroman',  20)
+
+        random.shuffle(player_names_list)
+
+        table_y_position = 10
+        for index,colour in enumerate(player_colours_list) :
+            table_surface = pygame.Surface((80,20))
+            table_surface.fill(colour)
+            table_rectangle = table_surface.get_rect(center=(1100,table_y_position))
+
+            name_surface = player_name_font.render(player_names_list[index], False, (100, 100, 100))
+
+
+            players_table_surfaces_list.append(table_surface)
+            players_table_rectangles_list.append(table_rectangle)
+            players_name_surfaces_list.append(name_surface)
+
+            table_y_position += 30
+
+        # generate racers
         player_y_pos = 15
         for colour in player_colours_list :
             player_surface = pygame.Surface((50,50))
@@ -59,22 +84,23 @@ def setup_game()->None:
         pygame.time.set_timer(movement_timer, 2000)
 
         # Caption
-        game_font = pygame.font.SysFont('timesnewroman',  20)
-        race_finish_surface = game_font.render('FINISH', False, (0, 0, 0))
+        race_font = pygame.font.SysFont('timesnewroman',  20)
+        race_finish_surface = race_font.render('FINISH', False, (0, 0, 0))
         race_finish_surface = pygame.transform.rotozoom(race_finish_surface, 270, 2)
 
+        # Winner indicator
         winner_font = pygame.font.SysFont('timesnewroman',  20)
         winner_surface = winner_font.render('W', False, (64, 64, 64))
         winner_rectangle = winner_surface.get_rect()
 
-        return race_surface, race_finish_surface, movement_timer, player_surfaces_list, player_rectangles_list, winner_surface , winner_rectangle
+        return race_surface, race_finish_surface, movement_timer, player_surfaces_list, player_rectangles_list, winner_surface , winner_rectangle , players_table_surfaces_list , players_table_rectangles_list, players_name_surfaces_list
 
     except Exception as err:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         logger.info(f"{err} on line {exc_tb.tb_lineno}")
         raise err
 
-def game_loop(screen: object, clock: object, movement_timer:object, race_surface: object, race_finish_surface: object, player_surfaces_list:List[object], player_rectangles_list:List[object], winner_surface:object, winner_rectangle:object)->None:
+def game_loop(screen: object, clock: object, movement_timer:object, race_surface: object, race_finish_surface: object, player_surfaces_list:List[object], player_rectangles_list:List[object], winner_surface:object, winner_rectangle:object, players_table_surfaces_list:List[object] , players_table_rectangles_list:List[object], players_name_surfaces_list:List[object])->None:
     try:
         race_underway = True
         while True:
@@ -94,12 +120,14 @@ def game_loop(screen: object, clock: object, movement_timer:object, race_surface
 
             current_speed = [random.randrange(1,10,1) for _ in range(len(player_surfaces_list))] if race_underway else list(itertools.repeat(0, len(player_surfaces_list)))
 
+            for i in range (len(players_table_surfaces_list)):
+                screen.blit(players_table_surfaces_list[i], players_table_rectangles_list[i])
+                screen.blit(players_name_surfaces_list[i],(players_table_rectangles_list[i].x, players_table_rectangles_list[i].y))
+
             for i in range(0,len(player_surfaces_list)):
                 if player_rectangles_list[i].x < 950 :
                     player_rectangles_list[i].x += current_speed[i]
                 else :
-                    # winner_name_rectangle.x = player_rectangles_list[i].x
-                    # winner_name_rectangle.y = player_rectangles_list[i].y
                     winner_rectangle.center = player_rectangles_list[i].center
                     race_underway = False
                 
@@ -111,7 +139,7 @@ def game_loop(screen: object, clock: object, movement_timer:object, race_surface
             pygame.display.update()
 
             # Control speed , set maximum frame rate - while loop must not run more than 60 times per second
-            clock.tick(40)
+            clock.tick(10)
     except Exception as err:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         logger.info(f"{err} on line {exc_tb.tb_lineno}")
@@ -122,9 +150,9 @@ def main()->None:
 
     screen, clock = setup_pygame()
 
-    race_surface, race_finish_surface, movement_timer, player_surfaces_list, player_rectangles_list , winner_surface , winner_rectangle= setup_game()
+    race_surface, race_finish_surface, movement_timer, player_surfaces_list, player_rectangles_list , winner_surface , winner_rectangle, players_table_surfaces_list , players_table_rectangles_list, players_name_surfaces_list = setup_game()
 
-    game_loop(screen, clock, movement_timer, race_surface, race_finish_surface, player_surfaces_list, player_rectangles_list, winner_surface , winner_rectangle)
+    game_loop(screen, clock, movement_timer, race_surface, race_finish_surface, player_surfaces_list, player_rectangles_list, winner_surface , winner_rectangle, players_table_surfaces_list , players_table_rectangles_list, players_name_surfaces_list)
 
 
 if __name__ == "__main__":
