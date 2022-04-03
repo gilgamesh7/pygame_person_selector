@@ -23,6 +23,11 @@ def setup_pygame():
         # create clock for controlling fps
         clock = pygame.time.Clock()
 
+        # set up music
+        bg_music = pygame.mixer.Sound('audio/Scheming_Weasel_faster.mp3')
+        bg_music.set_volume(0.2)
+        bg_music.play(loops = -1)
+
         return screen, clock
 
     except Exception as err:
@@ -39,8 +44,10 @@ def setup_game()->None:
         # Set up race surface / background
         player_surfaces_list = []
         player_rectangles_list = []
-        player_colours_list = ['Red', 'Black', 'Orange', 'Purple','Yellow','Magenta','Gray','Cyan','White','Violet','Olive','Brown']
-        player_names_list = ['Bernard','Tony','Naresh','Norman','Pawan','Rajesh','Roopal','Srikar','Stephen','Sudha','Vishaal','Raman']
+        player_colours_list = ['Black', 'Orange', 'Purple','Yellow','Cyan','White','Olive','Brown']
+        player_names_list = ['Tony','Naresh','Pawan','Rajesh','Roopal','Stephen','Vishaal','Raman']
+        # player_colours_list = ['Red', 'Black', 'Orange', 'Purple','Yellow','Magenta','Gray','Cyan','White','Violet','Olive','Brown']
+        # player_names_list = ['Bernard','Tony','Naresh','Norman','Pawan','Rajesh','Roopal','Srikar','Stephen','Sudha','Vishaal','Raman']
 
         # assign colours to players
         players_table_surfaces_list = []
