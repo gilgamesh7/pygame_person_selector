@@ -39,12 +39,12 @@ def setup_game()->None:
     try:
         # Create race surface with width, height
         race_surface = pygame.Surface((1200,700))
-        race_surface.fill('Green')
+        race_surface.fill('White')
 
         # Set up race surface / background
         player_surfaces_list = []
         player_rectangles_list = []
-        player_colours_list = ['Black', 'Orange', 'Purple','Yellow','Cyan','White','Olive','Brown']
+        player_colours_list = ['Black', 'Orange', 'Purple','Yellow','Cyan','Red','Olive','Brown']
         player_names_list = ['Tony','Naresh','Pawan','Rajesh','Roopal','Stephen','Vishaal','Raman']
         # player_colours_list = ['Red', 'Black', 'Orange', 'Purple','Yellow','Magenta','Gray','Cyan','White','Violet','Olive','Brown']
         # player_names_list = ['Bernard','Tony','Naresh','Norman','Pawan','Rajesh','Roopal','Srikar','Stephen','Sudha','Vishaal','Raman']
@@ -60,9 +60,11 @@ def setup_game()->None:
 
         table_y_position = 10
         for index,colour in enumerate(player_colours_list) :
-            table_surface = pygame.Surface((80,20))
+            # Tried to put color block before name, so for now reduced the color block size to make the text readable
+            table_surface = pygame.Surface((20,20))
             table_surface.fill(colour)
             table_rectangle = table_surface.get_rect(center=(1100,table_y_position))
+            
 
             name_surface = player_name_font.render(player_names_list[index], False, (100, 100, 100))
 
@@ -74,7 +76,7 @@ def setup_game()->None:
             table_y_position += 30
 
         # generate racers
-        player_y_pos = 15
+        player_y_pos = 75
         for colour in player_colours_list :
             player_surface = pygame.Surface((50,50))
             player_surface.fill(colour)
@@ -121,7 +123,9 @@ def game_loop(screen: object, clock: object, movement_timer:object, race_surface
                     exit()
 
             # blit - Block Image Transfer i.e put a regular surface on top of display surface
+            roadImage = pygame.image.load("images/road-asphalt-highway-street-marking-horizontal-vector-21645745.jpeg").convert()
             screen.blit(race_surface,(0,0))
+            screen.blit(roadImage,(0,0))
             screen.blit(race_finish_surface,(1000,300))
             pygame.draw.line(screen, (0,0,0),(1000,0),(1000,800))
 
