@@ -44,10 +44,10 @@ def setup_game()->None:
         # Set up race surface / background
         player_surfaces_list = []
         player_rectangles_list = []
-        player_colours_list = ['Black', 'Orange', 'Purple','Yellow','Cyan','Red','Olive','Brown']
-        player_names_list = ['Tony','Naresh','Pawan','Rajesh','Roopal','Stephen','Vishaal','Raman']
-        # player_colours_list = ['Red', 'Black', 'Orange', 'Purple','Yellow','Magenta','Gray','Cyan','White','Violet','Olive','Brown']
-        # player_names_list = ['Bernard','Tony','Naresh','Norman','Pawan','Rajesh','Roopal','Srikar','Stephen','Sudha','Vishaal','Raman']
+        
+        player_colours_list = ['green', 'purple', 'grey', 'red','white','yellow', 'blue','cyan','orange', 'olive','brown','magenta']
+        #player_names_list = ['Tony','Naresh','Pawan','Rajesh','Roopal', 'Bernard']
+        player_names_list = ['Bernard','Tony','Naresh','Norman','Pawan','Rajesh','Roopal','Srikar','Stephen','Sudha','Vishaal','Raman']
 
         # assign colours to players
         players_table_surfaces_list = []
@@ -76,16 +76,18 @@ def setup_game()->None:
             table_y_position += 30
 
         # generate racers
-        player_y_pos = 75
+        player_y_pos = 60
         for colour in player_colours_list :
-            player_surface = pygame.Surface((50,50))
-            player_surface.fill(colour)
+            player_surface = pygame.Surface((75,38))
+            carImage = pygame.image.load("images/"+colour+"-car.png").convert()
+            player_surface.blit(carImage,(0,0))
+            #player_surface.fill(colour)
             player_rectangle = player_surface.get_rect(center=(10,player_y_pos))
 
             player_surfaces_list.append(player_surface)
             player_rectangles_list.append(player_rectangle)
 
-            player_y_pos += 60
+            player_y_pos += 50
 
 
         # Set up timer
@@ -124,6 +126,7 @@ def game_loop(screen: object, clock: object, movement_timer:object, race_surface
 
             # blit - Block Image Transfer i.e put a regular surface on top of display surface
             roadImage = pygame.image.load("images/road-asphalt-highway-street-marking-horizontal-vector-21645745.jpeg").convert()
+            #screen.blit(race_surface,(0,0))
             screen.blit(race_surface,(0,0))
             screen.blit(roadImage,(0,0))
             screen.blit(race_finish_surface,(1000,300))
@@ -136,7 +139,7 @@ def game_loop(screen: object, clock: object, movement_timer:object, race_surface
                 screen.blit(players_name_surfaces_list[i],(players_table_rectangles_list[i].x, players_table_rectangles_list[i].y))
 
             for i in range(0,len(player_surfaces_list)):
-                if player_rectangles_list[i].x < 950 :
+                if player_rectangles_list[i].x < 925 :
                     player_rectangles_list[i].x += current_speed[i]
                 else :
                     winner_rectangle.center = player_rectangles_list[i].center
