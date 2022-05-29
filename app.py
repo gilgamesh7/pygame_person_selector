@@ -24,7 +24,8 @@ def setup_pygame():
         clock = pygame.time.Clock()
 
         # set up music
-        bg_music = pygame.mixer.Sound('audio/Race-car-sound-effects.mp3')
+        bg_music = pygame.mixer.Sound('audio/miscWithFinsiher.mp3')
+
         bg_music.set_volume(0.2)
         bg_music.play(loops = -1)
 
