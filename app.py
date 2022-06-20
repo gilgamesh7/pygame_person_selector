@@ -12,6 +12,44 @@ PGMNAME = "selector"
 logging.basicConfig(level=logging.INFO, format="[{asctime}] - {funcName} - {lineno} - {message}", style='{')
 logger = logging.getLogger(PGMNAME)
 
+# Get password from Azure Key Vault
+from azure.keyvault.secrets import SecretClient
+from azure.identity import DefaultAzureCredential
+
+keyVaultName = "person-selector-kv"
+KVUri = "https://person-selector-kv.vault.azure.net"
+secretName = "person-selector-db-password"
+
+credential = DefaultAzureCredential()
+client = SecretClient(vault_url=KVUri, credential=credential)
+
+db_password = client.get_secret(secretName)
+
+# Connect to database
+import pyodbc
+
+server = 'person-selector-db-server.database.windows.net'
+database = 'person_selector_db'
+username = 'personselectoradmin'
+password = db_password.value   
+driver= '{ODBC Driver 17 for SQL Server}'
+
+name_list=[]
+colour_list=[]
+conn_string = 'DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password+';Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
+with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password) as conn:
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT * FROM dbo.person_selector")
+        row = cursor.fetchone()
+        while row:
+            name_list.append(row[1])
+            colour_list.append(row[5])
+
+            row = cursor.fetchone()
+
+print(name_list)
+print(colour_list)
+
 def setup_pygame():
     try:
         pygame.init()
