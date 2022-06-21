@@ -42,8 +42,10 @@ with pyodbc.connect('DRIVER='+driver+';SERVER=tcp:'+server+';PORT=1433;DATABASE=
         cursor.execute("SELECT * FROM dbo.person_selector")
         row = cursor.fetchone()
         while row:
-            name_list.append(row[1])
-            colour_list.append(row[5])
+            # Add only if active and not selected before
+            if row[3] or row[4] is not None:
+                name_list.append(row[1])
+                colour_list.append(row[5])
 
             row = cursor.fetchone()
 
@@ -84,9 +86,8 @@ def setup_game()->None:
         player_surfaces_list = []
         player_rectangles_list = []
         
-        player_colours_list = ['green', 'purple', 'grey', 'red','white','yellow', 'blue','cyan','orange', 'olive','brown','magenta']
-        #player_names_list = ['Tony','Naresh','Pawan','Rajesh','Roopal', 'Bernard']
-        player_names_list = ['Bernard','Tony','Naresh','Norman','Pawan','Rajesh','Roopal','Srikar','Stephen','Sudha','Vishaal','Raman']
+        player_colours_list = colour_list
+        player_names_list = name_list
 
         # assign colours to players
         players_table_surfaces_list = []
